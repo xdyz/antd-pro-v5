@@ -5,27 +5,33 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
+
 export default {
   dev: {
     '/api/v1': {
       // target: 'http://dev.do.xmfunny.com/api/v1',
       target: 'http://localhost:3000/api/v1',
       changeOrigin: true,
-      pathRewrite: { '^/api/v1': '' }
+      pathRewrite: {'^/api/v1': ''}
+    },
+    '/upload/views/icons': {
+      target: 'http://10.80.0.22:3000/',
+      changeOrigin: true,
+      pathRewrite: {'^/api/v1': '/upload/views/icons'}
     }
   },
   test: {
     '/api/': {
       target: 'https://preview.pro.ant.design',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
-    },
+      pathRewrite: {'^': ''}
+    }
   },
   pre: {
     '/api/': {
       target: 'your pre url',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
-    },
-  },
-};
+      pathRewrite: {'^': ''}
+    }
+  }
+}

@@ -5,4 +5,12 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
-};
+  rules: {
+    'no-param-reassign': 0,
+    semi: [2, 'never'],
+    'comma-dangle': ['error', 'only-multiline'],
+    'global-require': 0,
+    'react-hooks/rules-of-hooks': 'off',
+    'react-hooks/exhaustive-deps': 'off'
+  }
+}

@@ -1,5 +1,12 @@
 @import '~antd/es/style/themes/default.less';
 
+.basicLogoAndLogin {
+  position: fixed;
+  right: 25%;
+  width: 350px;
+  top: 25%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -25,10 +32,10 @@
 
 @media (min-width: @screen-md-min) {
   .container {
-    background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+    background-image: url('../../../assets/images/login.png');
     background-repeat: no-repeat;
-    background-position: center 110px;
-    background-size: 100%;
+    background-position: 10% center;
+    background-size: contain;
   }
 
   .content {
@@ -37,6 +44,7 @@
 }
 
 .top {
+ .basicLogoAndLogin();
   text-align: center;
 }
 
@@ -71,8 +79,11 @@
 }
 
 .main {
-  width: 328px;
+  padding: 0 20px 20px 20px ;
   margin: 0 auto;
+  background: rgba(255, 255, 255, 0.5);
+  .basicLogoAndLogin();
+  top: 30%;
   @media screen and (max-width: @screen-sm) {
     width: 95%;
     max-width: 328px;

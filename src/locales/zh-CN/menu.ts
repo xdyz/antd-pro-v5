@@ -1,5 +1,5 @@
 export default {
-  'menu.welcome': '欢迎',
+  'menu.welcome': '首页',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',
@@ -45,8 +45,21 @@ export default {
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
-  'menu.editor': '图形编辑器',
-  'menu.editor.flow': '流程编辑器',
-  'menu.editor.mind': '脑图编辑器',
-  'menu.editor.koni': '拓扑编辑器',
-};
+
+  // 任务管线
+  'menu.taskPipeline': '任务管线',
+  'menu.taskPipeline.infinite': '任务列表',
+  'menu.taskPipeline.taskDetail': '任务详情',
+  'menu.taskPipeline.constructDetail': '构建详情',
+
+  // 工具箱
+  'menu.toolbox': '工具箱',
+  'menu.toolbox.f2tb': 'F2TB',
+
+  // 系统管理
+  'menu.system': '系统管理',
+  'menu.system.users': '用户管理',
+  'menu.system.menus': '菜单管理',
+  'menu.system.roles': '角色管理',
+  'menu.system.webhooks': 'Git Webhook'
+}

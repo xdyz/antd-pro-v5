@@ -17,7 +17,11 @@ declare module 'mockjs';
 declare module 'react-fittext';
 declare module 'bizcharts-plugin-slider';
 declare module 'js-cookie';
-
+declare module 'react-json-view';
+declare module 'moment';
+declare module 'uuid';
+declare module 'react-codemirror2';
+declare module 'qrcode.react';
 // google analytics interface
 type GAFieldsObject = {
   eventCategory: string;
@@ -37,10 +41,10 @@ type Window = {
   routerBase: string;
 };
 
-declare let ga: () => void;
+declare let ga: () => void
 
 // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefined;
+declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefined
 
-declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
+declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false

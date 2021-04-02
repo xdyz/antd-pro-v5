@@ -49,4 +49,21 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
-};
+
+  // 任务管线
+  'menu.taskPipeline': 'Task Pipeline',
+  'menu.taskPipeline.infinite': 'Infinite',
+  'menu.taskPipeline.taskDetail': 'Task Detail',
+  'menu.taskPipeline.constructDetail': 'Construct Detail',
+
+  // 工具箱
+  'menu.toolbox': 'Tool Box',
+  'menu.toolbox.f2tb': 'F2TB',
+
+  // 系统管理
+  'menu.system': 'System',
+  'menu.system.users': 'Users',
+  'menu.system.menus': 'Menus',
+  'menu.system.roles': 'Roles',
+  'menu.system.webhooks': 'Git Webhook'
+}
