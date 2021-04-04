@@ -1,22 +1,25 @@
-import React, { useState } from 'react'
-import { GridContent, PageContainer } from '@ant-design/pro-layout'
-import { Row, Col, Card, Button, Tree, Input, Modal } from 'antd'
-import { ApartmentOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { DataNode } from 'antd/lib/tree'
+import React, {useState, useEffect} from 'react'
+import {GridContent, PageContainer} from '@ant-design/pro-layout'
+import {Row, Col, Card, Button, Tree, Input, Modal} from 'antd'
+import {ApartmentOutlined, DeleteOutlined} from '@ant-design/icons'
+import type {DataNode} from 'antd/lib/tree'
 import MenuForm from './components/MenuForm'
+import {getMenus, deleteMenu} from '@/services/system/menus/index'
 import styles from './index.less'
+import {notifyInfoTip} from '@/utils/utils'
 
 type TreeTitleType = {
-  cardTitle: string;
-  createOrDel: boolean;
-  onOpen: () => void;
-};
+  cardTitle: string
+  createOrDel: boolean
+  onOpen?: () => void
+  onDelete?: () => void
+}
 
 type nodeData = {
-  name?: string;
-} & DataNode;
+  name?: string
+} & DataNode
 const TreeTitle: React.FC<TreeTitleType> = (props) => {
-  const { cardTitle, createOrDel, onOpen } = props
+  const {cardTitle, createOrDel, onOpen, onDelete} = props
   return (
     <div className={styles.titleContainer}>
       <span>{cardTitle}</span>
@@ -26,7 +29,7 @@ const TreeTitle: React.FC<TreeTitleType> = (props) => {
           新建
         </Button>
       ) : (
-        <Button type="ghost" danger size="middle" onClick={onOpen}>
+        <Button type="ghost" danger size="middle" onClick={onDelete}>
           <DeleteOutlined />
           删除
         </Button>
@@ -36,7 +39,23 @@ const TreeTitle: React.FC<TreeTitleType> = (props) => {
 }
 
 const cardHeight = {
-  height: '80vh',
+  height: '80vh'
+}
+
+function convert(
+  list: (SystemMenus.MenuTreeDataType & {children: SystemMenus.MenuTreeDataType[]})[]
+) {
+  return list.reduce((pre, cur, index, arr) => {
+    if (cur.parentId === 0) pre.push(cur as never)
+    else {
+      const parent = arr.find((item) => item.id === cur.parentId)
+      if (parent) {
+        parent.children = parent.children || []
+        parent.children.push(cur)
+      }
+    }
+    return pre
+  }, [])
 }
 
 const Menu: React.FC<Record<string, never>> = () => {
@@ -47,15 +66,42 @@ const Menu: React.FC<Record<string, never>> = () => {
     parentId: undefined,
     icon: undefined,
     hideInMenu: false,
-    path: '',
-    key: '',
+    path: ''
   })
+  const [menuList, setMenuList] = useState<(SystemMenus.MenuTreeDataType & {key: number})[]>([])
+  const [topLists, setTopLists] = useState<SystemMenus.MenuTreeDataType[]>([])
   const openCreate = () => {
     setShowVisible(true)
   }
+
+  const getAllMenus = async () => {
+    const res = await getMenus()
+    if (res?.code === 0) {
+      const list = res?.data.map((item: SystemMenus.MenuTreeDataType) => ({key: item.id, ...item}))
+      const treeLists = convert(list)
+      setMenuList(treeLists ?? [])
+      const topList = res?.data.filter((item: SystemMenus.MenuTreeDataType) => item.parentId === 0)
+      setTopLists(topList)
+    }
+  }
   const cancelTreeCreate = () => {
     setShowVisible(false)
+    getAllMenus()
   }
+
+  const deleteOneMenu = async (id?: number) => {
+    const res = await deleteMenu(id)
+    if (res?.code === 0) {
+      notifyInfoTip('菜单', '删除', true)
+      getAllMenus()
+    } else {
+      notifyInfoTip('菜单', '删除', false, res?.errMessage)
+    }
+  }
+
+  useEffect(() => {
+    getAllMenus()
+  }, [])
   return (
     <PageContainer>
       <GridContent>
@@ -64,16 +110,15 @@ const Menu: React.FC<Record<string, never>> = () => {
             <Card
               title={<TreeTitle cardTitle="菜单树" createOrDel onOpen={() => openCreate()} />}
               bordered={false}
-              style={{ ...cardHeight, marginBottom: '10px' }}
-            >
+              style={{...cardHeight, marginBottom: '10px'}}>
               <Input />
-              <div>
+              <div style={{marginTop: '20px'}}>
                 <Tree
-                  treeData={[]}
+                  treeData={menuList}
                   titleRender={(node: nodeData) => {
                     return <span>{node.name}</span>
                   }}
-                  onSelect={(selectedKeys, { selectedNodes }) => {
+                  onSelect={(selectedKeys, {selectedNodes}) => {
                     const params = JSON.parse(JSON.stringify(selectedNodes[0]))
                     setformInfo(params)
                   }}
@@ -83,16 +128,16 @@ const Menu: React.FC<Record<string, never>> = () => {
           </Col>
           <Col lg={17} md={24} sm={24} xs={24}>
             <Card
-              title={<TreeTitle cardTitle="详情" createOrDel={false} onOpen={() => openCreate()} />}
+              title={
+                <TreeTitle
+                  cardTitle="详情"
+                  createOrDel={false}
+                  onDelete={() => deleteOneMenu(formInfo?.id)}
+                />
+              }
               bordered={false}
-              style={{ ...cardHeight }}
-            >
-              <MenuForm
-                trees={[]}
-                formInfo={formInfo}
-                isCreate={false}
-                onCancelModal={() => {}}
-              />
+              style={{...cardHeight}}>
+              <MenuForm trees={[]} formInfo={formInfo} isCreate={false} onCancelModal={() => {}} />
             </Card>
           </Col>
         </Row>
@@ -104,9 +149,8 @@ const Menu: React.FC<Record<string, never>> = () => {
         destroyOnClose
         getContainer={false}
         visible={showVisible}
-        onCancel={cancelTreeCreate}
-      >
-        <MenuForm trees={[]} formInfo={formInfo} isCreate onCancelModal={cancelTreeCreate} />
+        onCancel={cancelTreeCreate}>
+        <MenuForm trees={topLists} formInfo={formInfo} isCreate onCancelModal={cancelTreeCreate} />
       </Modal>
     </PageContainer>
   )
